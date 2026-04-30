@@ -111,6 +111,42 @@ Creates both project marketplace and plugin:
 | `{{workflows}}` | Selected workflows |
 | `{{date}}` | Current date |
 
+### 4b. Plugin JSON Format (CRITICAL)
+
+**MUST use EXACTLY this format for `.claude-plugin/plugin.json`:**
+
+```json
+{
+  "name": "{{project}}-flow",
+  "description": "{{project}} workflow plugin",
+  "version": "1.0.0",
+  "author": {
+    "name": "catalyst"
+  }
+}
+```
+
+**ALLOWED FIELDS ONLY:**
+- `name` (string, required)
+- `description` (string, required)  
+- `version` (string, required)
+- `author` (object with `name`, optional `email`/`url`)
+- `repository`, `homepage`, `license`, `keywords` (optional)
+
+**FORBIDDEN FIELDS (will cause install failure):**
+| Field | Why Forbidden |
+|-------|---------------|
+| `skills` | Auto-discovered from skills/ directory |
+| `agents` | Auto-discovered from agents/ directory |
+| `workflows` | Not part of Claude Code schema |
+| `commands` | Auto-discovered |
+| `hooks` | Auto-discovered |
+| `stack` | Not part of schema |
+| `memory` | Not part of schema |
+| `generated` | Not part of schema |
+
+**COMMON MISTAKE:** `"author": "string"` — WRONG. Must be `"author": {"name": "string"}`.
+
 ### 5. Run Validation
 
 **MANDATORY** - abort if validation fails:

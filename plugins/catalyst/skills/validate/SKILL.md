@@ -47,10 +47,41 @@ Ensures generated flow plugins are valid and deterministic.
 
 Validates JSON/YAML against schemas in `schemas/`:
 
-```bash
-# plugin.json
-jq --exit-status -f schemas/plugin-json.schema.json .claude-plugin/plugin.json
+#### Plugin JSON Validation (CRITICAL)
 
+**Check for forbidden fields that cause Claude Code install failure:**
+
+```bash
+# Check for forbidden fields
+FORBIDDEN='skills|agents|workflows|commands|hooks|stack|memory|generated'
+if grep -E "\"($FORBIDDEN)\":" .claude-plugin/plugin.json; then
+  echo "FAIL: plugin.json contains forbidden fields"
+  exit 1
+fi
+
+# Check author is object, not string
+if jq -e '.author | type == "string"' .claude-plugin/plugin.json >/dev/null 2>&1; then
+  echo "FAIL: author must be object {\"name\": \"...\"}, not string"
+  exit 1
+fi
+
+# Validate required fields exist
+jq -e '.name and .description and .version' .claude-plugin/plugin.json
+```
+
+**Valid plugin.json example:**
+```json
+{
+  "name": "my-flow",
+  "description": "My workflow plugin",
+  "version": "1.0.0",
+  "author": {"name": "catalyst"}
+}
+```
+
+#### Other Schema Validations
+
+```bash
 # SKILL.md frontmatter
 yq '.frontmatter' skills/*/SKILL.md | validate-against skill-frontmatter.schema.json
 
