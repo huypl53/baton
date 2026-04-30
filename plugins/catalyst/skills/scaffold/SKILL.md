@@ -152,13 +152,24 @@ Creates both project marketplace and plugin:
 **MANDATORY** - abort if validation fails:
 
 ```bash
+# Run the validation script (programmatic check)
+bash scripts/validate-plugin-json.sh plugins/{{project}}-flow/.claude-plugin/plugin.json
+
+# Also run skill-based validation
 /catalyst:validate plugins/{{project}}-flow --strict
 ```
+
+**Validation script checks:**
+- No forbidden fields (skills, agents, workflows, etc.)
+- Author is object, not string
+- Required fields present (name, description, version)
+- Name format correct (lowercase, alphanumeric, hyphens)
+- Version is semver format
 
 If FAIL:
 - Show errors
 - Abort scaffold
-- Do not register in marketplace
+- Do not create marketplace
 
 If PASS:
 - Continue to marketplace registration
@@ -223,6 +234,33 @@ Your new skills will be available as:
 # Link CLAUDE.md to target project root for global context
 ln -sf "$(pwd)/plugins/{{project}}-flow/CLAUDE.md" "./CLAUDE.md"
 ```
+
+### 9. Setup Validation Hooks (Optional but Recommended)
+
+Add hooks to `.claude/settings.json` for ongoing validation:
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": {
+          "tool": "Write",
+          "filePath": "**/.claude-plugin/plugin.json"
+        },
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'jq -e \".author | type != \\\"string\\\"\" \"$CLAUDE_FILE_PATH\" >/dev/null || { echo \"ERROR: author must be object\"; exit 1; }'"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+This hook will **block invalid plugin.json writes** at save time, preventing install failures.
 
 ## Dry-Run Mode
 

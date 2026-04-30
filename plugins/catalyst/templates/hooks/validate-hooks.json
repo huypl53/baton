@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$comment": "Claude Code hooks for plugin/marketplace validation. Add to .claude/settings.json",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": {
+          "tool": "Write",
+          "filePath": "**/.claude-plugin/plugin.json"
+        },
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'FORBIDDEN=\"skills|agents|workflows|commands|hooks|stack|memory|generated\"; if grep -qE \"\\\"($FORBIDDEN)\\\":\" \"$CLAUDE_FILE_PATH\"; then echo \"ERROR: plugin.json contains forbidden fields\"; exit 1; fi; if jq -e \".author | type == \\\"string\\\"\" \"$CLAUDE_FILE_PATH\" 2>/dev/null; then echo \"ERROR: author must be object, not string\"; exit 1; fi; echo \"✓ plugin.json validated\"'"
+          }
+        ]
+      },
+      {
+        "matcher": {
+          "tool": "Write",
+          "filePath": "**/.claude-plugin/marketplace.json"
+        },
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'if ! jq -e \".name and .plugins\" \"$CLAUDE_FILE_PATH\" >/dev/null 2>&1; then echo \"ERROR: marketplace.json missing name or plugins\"; exit 1; fi; echo \"✓ marketplace.json validated\"'"
+          }
+        ]
+      }
+    ]
+  }
+}
