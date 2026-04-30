@@ -31,6 +31,22 @@ Ensure `~/.claude/skills/` directory exists before running setup.
 /plugin install catalyst@huypl53
 ```
 
+### After adding a new Catalyst plugin locally
+
+If you add or change plugin entries in this repo (for example a new plugin under `plugins/`), you still need to re-add this local marketplace before install commands can see updates.
+
+Run this from the repository root (the `./` must point to this repo's root where `.claude-plugin/marketplace.json` exists):
+
+```bash
+/plugin marketplace add ./
+```
+
+Then install the plugin as usual:
+
+```bash
+/plugin install <plugin>@huypl53
+```
+
 ### Local symlink install (development)
 
 ```bash
