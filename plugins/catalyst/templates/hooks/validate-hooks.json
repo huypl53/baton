@@ -11,7 +11,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c 'FORBIDDEN=\"skills|agents|workflows|commands|hooks|stack|memory|generated\"; if grep -qE \"\\\"($FORBIDDEN)\\\":\" \"$CLAUDE_FILE_PATH\"; then echo \"ERROR: plugin.json contains forbidden fields\"; exit 1; fi; if jq -e \".author | type == \\\"string\\\"\" \"$CLAUDE_FILE_PATH\" 2>/dev/null; then echo \"ERROR: author must be object, not string\"; exit 1; fi; echo \"✓ plugin.json validated\"'"
+            "command": "bash -c 'FILE=\"$CLAUDE_FILE_PATH\"; FORBIDDEN=\"skills|agents|workflows|commands|hooks|stack|memory|generated\"; if grep -qE \"\\\"($FORBIDDEN)\\\":\" \"$FILE\"; then echo \"@@HOOK_FAILED@@\"; echo \"plugin.json contains FORBIDDEN fields that cause install failure.\"; echo \"\"; echo \"FIX: Remove these fields from plugin.json:\"; grep -oE \"\\\"($FORBIDDEN)\\\"\" \"$FILE\" | sort -u; echo \"\"; echo \"These are auto-discovered by Claude Code - do not include them.\"; exit 1; fi; if jq -e \".author | type == \\\"string\\\"\" \"$FILE\" 2>/dev/null; then echo \"@@HOOK_FAILED@@\"; echo \"plugin.json has wrong author format.\"; echo \"\"; echo \"FIX: Change author from string to object:\"; echo \"  WRONG: \\\"author\\\": \\\"name\\\"\"; echo \"  RIGHT: \\\"author\\\": {\\\"name\\\": \\\"name\\\"}\"; exit 1; fi; echo \"✓ plugin.json valid\"'"
           }
         ]
       },
@@ -23,7 +23,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c 'if ! jq -e \".name and .plugins\" \"$CLAUDE_FILE_PATH\" >/dev/null 2>&1; then echo \"ERROR: marketplace.json missing name or plugins\"; exit 1; fi; echo \"✓ marketplace.json validated\"'"
+            "command": "bash -c 'FILE=\"$CLAUDE_FILE_PATH\"; if ! jq -e \".name\" \"$FILE\" >/dev/null 2>&1; then echo \"@@HOOK_FAILED@@\"; echo \"marketplace.json missing required field: name\"; echo \"\"; echo \"FIX: Add name field:\"; echo \"  {\\\"name\\\": \\\"my-marketplace\\\", ...}\"; exit 1; fi; if ! jq -e \".plugins\" \"$FILE\" >/dev/null 2>&1; then echo \"@@HOOK_FAILED@@\"; echo \"marketplace.json missing required field: plugins\"; echo \"\"; echo \"FIX: Add plugins array:\"; echo \"  {\\\"plugins\\\": [{\\\"name\\\": \\\"...\\\", \\\"source\\\": \\\"./...\\\"}]}\"; exit 1; fi; echo \"✓ marketplace.json valid\"'"
           }
         ]
       }
