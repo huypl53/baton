@@ -1,0 +1,30 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": {
+          "tool": "Write",
+          "filePath": "**/.claude-plugin/plugin.json"
+        },
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'FILE=\"$CLAUDE_FILE_PATH\"; FORBIDDEN=\"skills|agents|workflows|commands|hooks|stack|memory|generated\"; if grep -qE \"\\\"($FORBIDDEN)\\\":\" \"$FILE\" 2>/dev/null; then echo \"@@HOOK_FAILED@@\"; echo \"plugin.json contains FORBIDDEN fields:\"; grep -oE \"\\\"($FORBIDDEN)\\\"\" \"$FILE\" | sort -u; echo \"\"; echo \"FIX: Remove these fields - Claude Code auto-discovers them.\"; exit 1; fi; if jq -e \".author | type == \\\"string\\\"\" \"$FILE\" >/dev/null 2>&1; then echo \"@@HOOK_FAILED@@\"; echo \"plugin.json author must be object, not string.\"; echo \"\"; echo \"FIX:\"; echo \"  WRONG: \\\"author\\\": \\\"name\\\"\"; echo \"  RIGHT: \\\"author\\\": {\\\"name\\\": \\\"name\\\"}\"; exit 1; fi; echo \"✓ plugin.json validated\"'"
+          }
+        ]
+      },
+      {
+        "matcher": {
+          "tool": "Write",
+          "filePath": "**/.claude-plugin/marketplace.json"
+        },
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'FILE=\"$CLAUDE_FILE_PATH\"; if ! jq -e \".name and .plugins\" \"$FILE\" >/dev/null 2>&1; then echo \"@@HOOK_FAILED@@\"; echo \"marketplace.json missing required fields.\"; echo \"\"; echo \"FIX: Must have name and plugins:\"; echo \"  {\\\"name\\\": \\\"x-marketplace\\\", \\\"plugins\\\": [...]}\"; exit 1; fi; echo \"✓ marketplace.json validated\"'"
+          }
+        ]
+      }
+    ]
+  }
+}
