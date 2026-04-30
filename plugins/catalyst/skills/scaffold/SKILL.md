@@ -69,31 +69,35 @@ Confirm? [Y/n]
 
 ### 3. Generate Plugin Structure
 
-From `templates/flow-plugin/`:
+Creates both project marketplace and plugin:
 
 ```
-plugins/{project}-flow/
-├── .claude-plugin/plugin.json    ← from plugin.json.tmpl
-├── CLAUDE.md                     ← from CLAUDE.md.tmpl
-├── skills/
-│   └── ship/SKILL.md             ← from ship.SKILL.md.tmpl
-├── commands/
-│   └── {workflow}-flow.md        ← from workflows/{type}-flow.md.tmpl
-├── agents/
-│   └── {agent}.md                ← from subagents/{agent}.md.tmpl
-├── memory/
-│   ├── INDEX.md                  ← from memory/INDEX.md.tmpl
-│   ├── gotchas.md                ← from memory/gotchas.md.tmpl
-│   ├── conventions.md            ← generated from analysis
-│   ├── workflows/
-│   │   └── {workflow}/
-│   │       ├── insights.md
-│   │       ├── gotchas.md
-│   │       └── test-flows.md
-│   └── decisions/
-│       └── {workflow}/
-└── hooks/
-    └── settings-hooks.json       ← from hooks/settings-hooks.json.tmpl
+{project-root}/
+├── .claude-plugin/
+│   └── marketplace.json          ← PROJECT MARKETPLACE (enables /plugin install)
+│
+└── plugins/{project}-flow/
+    ├── .claude-plugin/plugin.json    ← from plugin.json.tmpl
+    ├── CLAUDE.md                     ← from CLAUDE.md.tmpl
+    ├── skills/
+    │   └── ship/SKILL.md             ← from ship.SKILL.md.tmpl
+    ├── commands/
+    │   └── {workflow}-flow.md        ← from workflows/{type}-flow.md.tmpl
+    ├── agents/
+    │   └── {agent}.md                ← from subagents/{agent}.md.tmpl
+    ├── memory/
+    │   ├── INDEX.md                  ← from memory/INDEX.md.tmpl
+    │   ├── gotchas.md                ← from memory/gotchas.md.tmpl
+    │   ├── conventions.md            ← generated from analysis
+    │   ├── workflows/
+    │   │   └── {workflow}/
+    │   │       ├── insights.md
+    │   │       ├── gotchas.md
+    │   │       └── test-flows.md
+    │   └── decisions/
+    │       └── {workflow}/
+    └── hooks/
+        └── settings-hooks.json       ← from hooks/settings-hooks.json.tmpl
 ```
 
 ### 4. Template Variables
@@ -123,27 +127,65 @@ If FAIL:
 If PASS:
 - Continue to marketplace registration
 
-### 6. Register in Marketplace
+### 6. Create Project Marketplace
 
-Add to `.claude-plugin/marketplace.json`:
+**CRITICAL:** Create `.claude-plugin/marketplace.json` at **PROJECT ROOT** (not inside the plugin).
+
+This makes the project itself a marketplace so the plugin can be installed via Claude Code's plugin system.
+
+```bash
+mkdir -p .claude-plugin
+```
+
+Create `.claude-plugin/marketplace.json`:
 
 ```json
 {
+  "name": "{{project}}-marketplace",
+  "description": "Local marketplace for {{project}} workflows",
+  "owner": {
+    "name": "{{project}}"
+  },
   "plugins": [
     {
       "name": "{{project}}-flow",
       "source": "./plugins/{{project}}-flow",
-      "description": "{{project}} workflow plugin"
+      "description": "{{project}} workflow plugin",
+      "version": "1.0.0"
     }
   ]
 }
 ```
 
-### 7. Symlink to Target (Optional)
+### 7. Installation Instructions
+
+After scaffold completes, output these commands for the user:
+
+```
+✓ Scaffold complete: {{project}}-flow
+
+To install the plugin:
+
+  1. Add the project as a marketplace:
+     /plugin marketplace add ./
+
+  2. Install the plugin:
+     /plugin install {{project}}-flow@{{project}}-marketplace
+
+  3. Reload plugins:
+     /reload-plugins
+
+Your new skills will be available as:
+  - /{{project}}-flow:ship
+  - /{{project}}-flow:crud-flow
+  - etc.
+```
+
+### 8. Symlink CLAUDE.md (Optional)
 
 ```bash
-# Link CLAUDE.md to target project
-ln -sf "$(pwd)/plugins/{{project}}-flow/CLAUDE.md" "{{target}}/.claude/CLAUDE.md"
+# Link CLAUDE.md to target project root for global context
+ln -sf "$(pwd)/plugins/{{project}}-flow/CLAUDE.md" "./CLAUDE.md"
 ```
 
 ## Dry-Run Mode
@@ -151,23 +193,28 @@ ln -sf "$(pwd)/plugins/{{project}}-flow/CLAUDE.md" "{{target}}/.claude/CLAUDE.md
 With `--dry-run`:
 
 ```
-Would create 15 files in plugins/sample-flow/:
+Would create:
 
-  .claude-plugin/plugin.json
-  CLAUDE.md
-  skills/ship/SKILL.md
-  commands/crud-flow.md
-  commands/auth-flow.md
-  agents/tester.md
-  agents/migrator.md
-  agents/e2e-runner.md
-  agents/reviewer.md
-  memory/INDEX.md
-  memory/gotchas.md
-  memory/conventions.md
-  memory/workflows/crud/insights.md
-  memory/workflows/auth/insights.md
-  ...
+  .claude-plugin/marketplace.json          ← PROJECT MARKETPLACE (new)
+
+  plugins/sample-flow/
+    .claude-plugin/plugin.json
+    CLAUDE.md
+    skills/ship/SKILL.md
+    commands/crud-flow.md
+    commands/auth-flow.md
+    agents/tester.md
+    agents/migrator.md
+    agents/e2e-runner.md
+    agents/reviewer.md
+    memory/INDEX.md
+    memory/gotchas.md
+    memory/conventions.md
+    memory/workflows/crud/insights.md
+    memory/workflows/auth/insights.md
+    ...
+
+Total: 16 files (1 marketplace + 15 plugin files)
 
 No files written.
 ```
@@ -178,17 +225,32 @@ No files written.
 ✓ Scaffold: sample-flow
 
 Created:
-  - 4 skills
-  - 2 workflow commands
-  - 4 subagents
-  - 8 memory files
-  - 1 hook config
+  - .claude-plugin/marketplace.json (project marketplace)
+  - plugins/sample-flow/ (plugin directory)
+    - 4 skills
+    - 2 workflow commands
+    - 4 subagents
+    - 8 memory files
+    - 1 hook config
 
 Validation: PASS
-Marketplace: registered
 
-Next steps:
-  /plugin install sample-flow@huypl53
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+To install the plugin, run these commands:
+
+  /plugin marketplace add ./
+  /plugin install sample-flow@sample-marketplace
+  /reload-plugins
+
+Your new skills:
+  /sample-flow:ship
+  /sample-flow:crud-flow
+  /sample-flow:auth-flow
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Next:
   /catalyst:workflow add payment
 ```
 
