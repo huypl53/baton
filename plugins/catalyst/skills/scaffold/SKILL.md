@@ -67,6 +67,54 @@ Detected conventions:
 Confirm? [Y/n]
 ```
 
+### 2b. Propose Short Skill Prefix
+
+**Generate short prefix from project name:**
+
+| Project Name | Proposed Prefix | Logic |
+|--------------|-----------------|-------|
+| `online-tutor` | `ot` | First letter of each word |
+| `my-app` | `ma` | First letter of each word |
+| `ecommerce` | `ec` | First 2 chars |
+| `api-gateway-service` | `ags` | First letter of each word |
+
+**Interactive prompt:**
+```
+Plugin name: online-tutor-flow
+Skill prefix for easy typing:
+
+  Suggested: ot
+  
+  Examples with this prefix:
+    /ot:ship
+    /ot:crud
+    /ot:auth
+
+  Enter prefix [ot]: _
+```
+
+**Rules:**
+- 2-4 lowercase characters
+- Must not conflict with existing prefixes (ck, catalyst, daily, nextjs, etc.)
+- User can override with custom prefix
+
+**Store in plugin.json:**
+```json
+{
+  "name": "online-tutor-flow",
+  "skillPrefix": "ot",
+  ...
+}
+```
+
+**Use prefix in skill names:**
+```yaml
+# skills/ship/SKILL.md
+---
+name: ot:ship  # NOT online-tutor-flow:ship
+---
+```
+
 ### 3. Generate Plugin Structure
 
 Creates both project marketplace and plugin:
@@ -210,6 +258,7 @@ After scaffold completes, output these commands for the user:
 
 ```
 ✓ Scaffold complete: {{project}}-flow
+  Skill prefix: {{prefix}}
 
 To install the plugin:
 
@@ -222,10 +271,11 @@ To install the plugin:
   3. Reload plugins:
      /reload-plugins
 
-Your new skills will be available as:
-  - /{{project}}-flow:ship
-  - /{{project}}-flow:crud-flow
-  - etc.
+Your new skills (using short prefix "{{prefix}}"):
+  /{{prefix}}:ship
+  /{{prefix}}:crud
+  /{{prefix}}:auth
+  /{{prefix}}:api
 ```
 
 ### 8. Symlink CLAUDE.md (Optional)
@@ -297,6 +347,7 @@ No files written.
 
 ```
 ✓ Scaffold: sample-flow
+  Skill prefix: sf
 
 Created:
   - .claude-plugin/marketplace.json (project marketplace)
@@ -317,10 +368,10 @@ To install the plugin, run these commands:
   /plugin install sample-flow@sample-marketplace
   /reload-plugins
 
-Your new skills:
-  /sample-flow:ship
-  /sample-flow:crud-flow
-  /sample-flow:auth-flow
+Your new skills (short prefix "sf"):
+  /sf:ship
+  /sf:crud
+  /sf:auth
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
