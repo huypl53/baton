@@ -78,25 +78,37 @@ Confirm? [Y/n]
 | `ecommerce` | `ec` | First 2 chars |
 | `api-gateway-service` | `ags` | First letter of each word |
 
-**Interactive prompt:**
+**Interactive prompt (MUST ask user to confirm):**
 ```
-Plugin name: online-tutor-flow
-Skill prefix for easy typing:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Skill Prefix Selection
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  Suggested: ot
-  
-  Examples with this prefix:
-    /ot:ship
-    /ot:crud
-    /ot:auth
+Plugin: online-tutor-flow
+Suggested prefix: ot
 
-  Enter prefix [ot]: _
+With this prefix, your skills will be:
+  /ot:ship
+  /ot:crud
+  /ot:auth
+
+Options:
+  [1] Accept "ot"
+  [2] Enter custom prefix
+  [3] Use full name (online-tutor-flow:*)
+
+Your choice [1]: _
 ```
 
-**Rules:**
-- 2-4 lowercase characters
+**If user chooses [2]:**
+```
+Enter custom prefix (2-4 lowercase chars): _
+```
+
+**Validation rules:**
+- 2-4 lowercase characters only
 - Must not conflict with existing prefixes (ck, catalyst, daily, nextjs, etc.)
-- User can override with custom prefix
+- If conflict detected, prompt again with warning
 
 **Store in plugin.json:**
 ```json
