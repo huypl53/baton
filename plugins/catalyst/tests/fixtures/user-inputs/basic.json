@@ -1,0 +1,16 @@
+{
+  "project_name": "sample",
+  "stack_confirmed": true,
+  "detected_stack": {
+    "language": "typescript",
+    "framework": "express",
+    "test_runner": "vitest",
+    "package_manager": "npm"
+  },
+  "selected_workflows": ["crud"],
+  "coding_style": {
+    "naming": "camelCase",
+    "indent": 2,
+    "quotes": "single"
+  }
+}

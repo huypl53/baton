@@ -1,0 +1,74 @@
+---
+name: review-flow
+description: "Product reviews and ratings: submission, moderation, display, aggregation"
+trigger: "review|rating|feedback|comment"
+---
+
+# {{project}}: Review Workflow
+
+## Scope
+
+- Review submission with rating
+- Moderation workflow
+- Review display and filtering
+- Rating aggregation
+- Helpful/unhelpful voting
+
+## Implementation Steps
+
+1. **Review Schema**
+   - User reference
+   - Product reference
+   - Rating (1-5)
+   - Text content
+   - Approved status
+   - Helpful count
+   - Created timestamp
+
+2. **Submission**
+   - Auth required
+   - One review per user per product (unique constraint)
+   - Rating validation (1-5)
+   - Text sanitization (XSS prevention)
+
+3. **Moderation**
+   - Auto-approve or queue for review
+   - Admin approval workflow
+   - Spam detection (optional)
+
+4. **Display**
+   - Show approved reviews only
+   - Sort by: newest, helpful, rating
+   - Filter by: rating
+   - Pagination
+
+5. **Aggregation**
+   - Calculate average rating
+   - Update on review add/update/delete
+   - Store in product or compute on read
+
+## Memory References
+
+@memory/workflows/review/gotchas.md
+@memory/workflows/review/insights.md
+@memory/workflows/review/test-flows.md
+
+## Delegation
+
+- **@agents/tester** - Unit tests for review logic
+- **@agents/e2e-runner** - E2E tests for review flows
+
+## Common Gotchas
+
+- Unique constraint: Add @@unique([userId, productId]) to Review model
+- Rating recalculation: Aggregate on write or use materialized view
+- XSS prevention: Never use dangerouslySetInnerHTML, sanitize input
+- Moderation: Consider auto-approve for verified purchasers
+
+## Test Flows
+
+1. Submit review → appears in moderation queue
+2. Approve review → appears on product page
+3. Submit second review same product → error (unique)
+4. Update rating → average recalculated
+5. Mark as helpful → count incremented

@@ -1,0 +1,56 @@
+---
+description: API endpoint development pipeline for {{project}}
+---
+
+Implement: $ARGUMENTS
+
+## Before You Code (MANDATORY)
+
+1. Read @memory/INDEX.md (global overview)
+2. Read @memory/conventions.md (project patterns)
+3. Read @memory/workflows/api/insights.md (API learnings)
+4. Read @memory/workflows/api/gotchas.md (API traps)
+5. Read @memory/workflows/api/test-flows.md (existing test commands)
+
+## Loop (strict order, no skipping)
+
+1. **Plan**: Outline API endpoint.
+   - HTTP method and path
+   - Request/response schema
+   - Auth requirements
+   - Rate limiting needs
+
+2. **Code**: Implement following conventions.md.
+   - Route handler
+   - Input validation (Zod/Joi/etc.)
+   - Error handling
+   - Response formatting
+
+3. **Unit Test**: Delegate `@agents/tester`.
+   - Test handler logic
+   - FAIL → fix, re-run. Max 3 attempts.
+
+4. **Integration**: Run integration tests.
+   - Full HTTP request/response
+   - Auth flows if protected
+   - Same fix loop.
+
+5. **Review**: Delegate `@agents/reviewer`.
+   - API design review
+   - Address findings.
+
+## After Shipping (MANDATORY)
+
+1. Update @memory/workflows/api/insights.md (what learned)
+2. Update @memory/workflows/api/gotchas.md (new traps found)
+3. Update @memory/workflows/api/test-flows.md (new test commands)
+4. Create @memory/decisions/api/{{date}}-slug.md (ADR if significant)
+5. If global insight → append to @memory/INDEX.md
+6. **Report**: Summarize shipped, decisions, insights captured.
+
+## API Checklist
+
+- [ ] Input validated
+- [ ] Errors return proper status codes
+- [ ] Response follows API conventions
+- [ ] Documented in API spec (if applicable)

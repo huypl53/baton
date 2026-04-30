@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "memory-structure.schema.json",
+  "title": "Memory Structure",
+  "description": "Schema for memory/ directory structure validation",
+  "type": "object",
+  "required": ["required_files", "required_dirs", "workflow_structure"],
+  "properties": {
+    "required_files": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": ["INDEX.md", "gotchas.md", "conventions.md"],
+      "description": "Required files in memory/"
+    },
+    "required_dirs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": ["workflows", "decisions"],
+      "description": "Required directories in memory/"
+    },
+    "workflow_structure": {
+      "type": "object",
+      "description": "Required files per workflow directory",
+      "properties": {
+        "required_files": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": ["insights.md", "gotchas.md", "test-flows.md"]
+        }
+      }
+    }
+  }
+}

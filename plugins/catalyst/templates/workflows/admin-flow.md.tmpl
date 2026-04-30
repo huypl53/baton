@@ -1,0 +1,74 @@
+---
+name: admin-flow
+description: "Admin dashboard: protected routes, data management, analytics, user management"
+trigger: "admin|dashboard|management|backoffice"
+---
+
+# {{project}}: Admin Workflow
+
+## Scope
+
+- Admin route protection
+- Dashboard overview
+- Data management CRUD
+- User management
+- Analytics and reports
+
+## Implementation Steps
+
+1. **Route Protection**
+   - Middleware-level auth check (NOT component-level)
+   - Role validation server-side
+   - Redirect unauthorized users
+   - Log access attempts
+
+2. **Dashboard**
+   - Key metrics overview
+   - Recent activity
+   - Quick actions
+   - Notifications
+
+3. **Data Management**
+   - List views with pagination
+   - Bulk actions
+   - Export functionality
+   - Search and filters
+
+4. **User Management**
+   - User list with roles
+   - Role assignment
+   - Account status (active/suspended)
+   - Activity logs
+
+5. **Analytics**
+   - Use database aggregations (not JS loops)
+   - Cache expensive queries
+   - Date range filtering
+   - Export reports
+
+## Memory References
+
+@memory/workflows/admin/gotchas.md
+@memory/workflows/admin/insights.md
+@memory/workflows/admin/test-flows.md
+
+## Delegation
+
+- **@agents/tester** - Unit tests for admin logic
+- **@agents/e2e-runner** - E2E tests for admin flows
+
+## Common Gotchas
+
+- Middleware auth: Protect at middleware level, not just UI
+- Server-side validation: Check role in API routes, not just UI
+- N+1 queries: Use Prisma includes/select in list views
+- Transactions: Wrap bulk operations in transactions
+- Pagination: Use cursor-based for large datasets
+
+## Test Flows
+
+1. Non-admin user → redirect to home
+2. Admin user → access dashboard
+3. Bulk delete → transaction rollback on error
+4. Change user role → verify effective immediately
+5. Export data → verify correct format

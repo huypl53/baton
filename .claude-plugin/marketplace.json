@@ -1,0 +1,25 @@
+{
+  "name": "huypl53",
+  "owner": {
+    "name": "huypl53"
+  },
+  "description": "Claude Code plugins for daily workflow and Next.js projects",
+  "plugins": [
+    {
+      "name": "daily",
+      "source": "./plugins/daily",
+      "description": "General productivity and workflow skills"
+    },
+    {
+      "name": "nextjs",
+      "source": "./plugins/nextjs",
+      "description": "Next.js ecommerce skill bundle"
+    },
+    {
+      "name": "catalyst",
+      "source": "./plugins/catalyst",
+      "description": "Meta-plugin that generates project-specific workflow plugins"
+    }
+  ]
+}
+

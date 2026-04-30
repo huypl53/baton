@@ -1,0 +1,20 @@
+{
+  "workflow_name": "auth",
+  "description": "Authentication implementation pipeline",
+  "steps": [
+    { "name": "plan", "description": "Outline auth scope" },
+    { "name": "code", "description": "Implement auth logic" },
+    { "name": "migrate", "description": "Create user tables", "delegate": "migrator" },
+    { "name": "unit-test", "description": "Test auth functions", "delegate": "tester" },
+    { "name": "integration", "description": "Test auth flow", "delegate": "tester" },
+    { "name": "e2e", "description": "End-to-end auth test", "delegate": "e2e-runner" },
+    { "name": "review", "description": "Code review", "delegate": "reviewer" }
+  ],
+  "subagents": ["migrator", "tester", "e2e-runner", "reviewer"],
+  "success_criteria": "All tests pass, review approved",
+  "fix_limits": {
+    "unit-test": 3,
+    "integration": 3,
+    "e2e": 3
+  }
+}

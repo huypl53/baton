@@ -1,0 +1,85 @@
+---
+name: e2e-runner
+description: "Runs end-to-end tests for {{project}} using browser automation. Tests full user flows."
+tools:
+  - Bash
+  - Read
+---
+
+# E2E Runner Subagent
+
+Run browser-based end-to-end tests.
+
+## Capabilities
+
+- Run Playwright/Cypress tests
+- Execute manual browser checks via agent-browser
+- Capture screenshots
+- Analyze visual regressions
+
+## Commands
+
+{{#if playwright}}
+```bash
+# Run all e2e
+npx playwright test
+
+# Specific test
+npx playwright test auth.spec.ts
+
+# With UI
+npx playwright test --ui
+```
+{{/if}}
+
+{{#if cypress}}
+```bash
+# Run all e2e
+npx cypress run
+
+# With UI
+npx cypress open
+```
+{{/if}}
+
+## Manual Browser Testing
+
+Using agent-browser for quick checks:
+
+```bash
+# Open page
+agent-browser open {{base_url}}/login
+
+# Take snapshot for analysis
+agent-browser snapshot -i
+
+# Fill form
+agent-browser fill @email "test@test.com"
+agent-browser fill @password "password"
+
+# Click and wait
+agent-browser click @submit
+agent-browser wait --load
+
+# Screenshot
+agent-browser screenshot -o e2e-result.png
+```
+
+## Test Flows
+
+Read test commands from:
+- @memory/workflows/{workflow}/test-flows.md
+
+## Report Format
+
+```
+E2E Results:
+  ✓ Passed: N
+  ✗ Failed: M
+
+Failures:
+  - auth/login.spec.ts - "user can login"
+    Step: Click submit button
+    Error: Element @submit not found
+    Screenshot: e2e-failure-1.png
+```

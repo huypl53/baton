@@ -1,0 +1,19 @@
+{
+  "hooks": {
+    "pre-commit": {
+      "command": "{{lint_command}}",
+      "description": "Run linter before commit"
+    },
+    "pre-push": {
+      "command": "{{test_command}}",
+      "description": "Run tests before push"
+    }
+  },
+  "rules": {
+    "memory-update": {
+      "trigger": "after-ship",
+      "action": "remind",
+      "message": "Update @memory/workflows/{workflow}/insights.md"
+    }
+  }
+}

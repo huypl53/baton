@@ -1,0 +1,68 @@
+---
+name: cart-flow
+description: "Shopping cart functionality: add/remove items, quantity management, persistence, guest vs logged-in merge"
+trigger: "cart|basket|shopping"
+---
+
+# {{project}}: Cart Workflow
+
+## Scope
+
+- Add/remove items from cart
+- Update quantities
+- Calculate totals with tax/shipping
+- Cart persistence (localStorage for guests, DB for users)
+- Merge guest cart on login
+- Inventory validation before checkout
+
+## Implementation Steps
+
+1. **Cart State**
+   - Define cart item schema: `{ productId, quantity, price, variant? }`
+   - Choose persistence: localStorage (guest) + DB (authenticated)
+   - Implement cart context/store
+
+2. **Add to Cart**
+   - Check inventory availability
+   - Handle variants (size, color)
+   - Update existing item quantity or add new
+   - Optimistic UI update
+
+3. **Cart Merge**
+   - On login: fetch DB cart + localStorage cart
+   - Merge strategy: sum quantities, keep newer prices
+   - Clear localStorage after merge
+   - Handle conflicts (item removed, out of stock)
+
+4. **Cart UI**
+   - Cart drawer/page component
+   - Quantity selector with bounds
+   - Remove item with confirmation
+   - Price calculations
+
+## Memory References
+
+@memory/workflows/cart/gotchas.md
+@memory/workflows/cart/insights.md
+@memory/workflows/cart/test-flows.md
+
+## Delegation
+
+- **@agents/tester** - Unit tests for cart operations
+- **@agents/e2e-runner** - E2E tests for cart flows
+
+## Common Gotchas
+
+- Cart merge direction: always merge INTO database cart, not vice versa
+- Concurrent edits: use optimistic locking or last-write-wins
+- Inventory re-validation: must check at checkout, not just add-to-cart
+- Price changes: decide whether to update prices on page load
+
+## Test Flows
+
+1. Add single item → verify cart state
+2. Add same item twice → verify quantity increment
+3. Update quantity → verify total recalculation
+4. Remove item → verify cart empty state
+5. Guest → login → verify cart merge
+6. Add item with insufficient inventory → verify error

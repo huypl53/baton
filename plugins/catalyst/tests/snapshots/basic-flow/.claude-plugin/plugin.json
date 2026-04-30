@@ -1,0 +1,5 @@
+{
+  "name": "sample-flow",
+  "description": "sample workflow plugin - deterministic coding pipelines",
+  "version": "1.0.0"
+}

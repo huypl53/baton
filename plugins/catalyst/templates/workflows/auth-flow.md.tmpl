@@ -1,0 +1,63 @@
+---
+description: Authentication implementation pipeline for {{project}}
+---
+
+Implement: $ARGUMENTS
+
+## Before You Code (MANDATORY)
+
+1. Read @memory/INDEX.md (global overview)
+2. Read @memory/conventions.md (project patterns)
+3. Read @memory/workflows/auth/insights.md (auth learnings)
+4. Read @memory/workflows/auth/gotchas.md (auth traps)
+5. Read @memory/workflows/auth/test-flows.md (existing test commands)
+
+## Loop (strict order, no skipping)
+
+1. **Plan**: Outline auth scope based on insights read above.
+   - Auth method? (JWT, session, OAuth)
+   - Providers? (local, Google, GitHub)
+   - MFA required?
+
+2. **Code**: Implement following conventions.md.
+   - User model (if new)
+   - Auth service
+   - Middleware/guards
+   - Login/logout/register routes
+
+3. **Migrate**: If DB changes → delegate `@agents/migrator`.
+   - User table
+   - Session/token storage
+
+4. **Unit Test**: Delegate `@agents/tester`.
+   - Test auth functions
+   - FAIL → fix, re-run. Max 3 attempts.
+
+5. **Integration**: Run integration tests.
+   - Full auth flow
+   - Same fix loop.
+
+6. **E2E**: Delegate `@agents/e2e-runner` with test-flows.md commands.
+   - Browser-based auth flow
+   - Same fix loop.
+
+7. **Review**: Delegate `@agents/reviewer`.
+   - Security focus
+   - Address findings.
+
+## After Shipping (MANDATORY)
+
+1. Update @memory/workflows/auth/insights.md (what learned)
+2. Update @memory/workflows/auth/gotchas.md (new traps found)
+3. Update @memory/workflows/auth/test-flows.md (new test commands)
+4. Create @memory/decisions/auth/{{date}}-slug.md (ADR)
+5. If global insight → append to @memory/INDEX.md
+6. **Report**: Summarize shipped, decisions, insights captured.
+
+## Security Checklist
+
+- [ ] Passwords hashed (bcrypt/argon2)
+- [ ] Tokens have expiry
+- [ ] CSRF protection
+- [ ] Rate limiting on login
+- [ ] Secure cookie flags

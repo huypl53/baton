@@ -1,0 +1,6 @@
+auth
+Authentication implementation pipeline
+1
+tester,e2e-runner,migrator,reviewer
+All tests pass, review approved
+3

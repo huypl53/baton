@@ -1,0 +1,74 @@
+---
+name: search-flow
+description: "Full-text search: indexing, query processing, filtering, autocomplete"
+trigger: "search|filter|query|find"
+---
+
+# {{project}}: Search Workflow
+
+## Scope
+
+- Full-text search implementation
+- Filtering and facets
+- Autocomplete/suggestions
+- Search results ranking
+- Recent searches
+
+## Implementation Steps
+
+1. **Search Index**
+   - Identify searchable fields
+   - Configure full-text index (Prisma: @@fulltext)
+   - Handle multi-language (if needed)
+   - Index update strategy
+
+2. **Query Processing**
+   - Parse search query
+   - Handle special characters
+   - Support operators (AND, OR, NOT)
+   - Fuzzy matching (optional)
+
+3. **Filtering**
+   - Category filters
+   - Price range
+   - Attributes/facets
+   - Sort options
+
+4. **Autocomplete**
+   - Popular searches
+   - Recent searches
+   - Product name suggestions
+   - Debounced input
+
+5. **Results**
+   - Relevance ranking
+   - Pagination
+   - Empty state
+   - "Did you mean?" suggestions
+
+## Memory References
+
+@memory/workflows/search/gotchas.md
+@memory/workflows/search/insights.md
+@memory/workflows/search/test-flows.md
+
+## Delegation
+
+- **@agents/tester** - Unit tests for search logic
+- **@agents/e2e-runner** - E2E tests for search flows
+
+## Common Gotchas
+
+- Prisma fulltext: Add @@fulltext([fields]) to model AND run migration
+- Index updates: Decide sync vs async reindexing
+- Empty searches: Handle gracefully with suggestions
+- Performance: Cache popular searches, debounce input
+- Partial matches: Configure relevance scoring
+
+## Test Flows
+
+1. Search exact match → first result is exact match
+2. Search partial → fuzzy results returned
+3. Search + filter → combined results
+4. Empty search → show popular/recent
+5. Search non-existent → empty state with suggestions

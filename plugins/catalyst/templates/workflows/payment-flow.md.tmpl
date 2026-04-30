@@ -1,0 +1,69 @@
+---
+name: payment-flow
+description: "Payment processing: checkout flow, payment gateway integration, order creation, webhook handling"
+trigger: "payment|checkout|stripe|purchase"
+---
+
+# {{project}}: Payment Workflow
+
+## Scope
+
+- Checkout form and validation
+- Payment gateway integration (Stripe, etc.)
+- Order creation and status management
+- Webhook handling for async payments
+- Refunds and cancellations
+
+## Implementation Steps
+
+1. **Checkout Form**
+   - Shipping address collection
+   - Payment method selection
+   - Order summary
+   - Terms acceptance
+
+2. **Payment Intent**
+   - Create order FIRST with status "pending"
+   - Then create PaymentIntent
+   - Store paymentIntentId on order
+   - Handle client-side payment confirmation
+
+3. **Webhook Handler**
+   - Verify webhook signature (CRITICAL)
+   - Handle payment_intent.succeeded
+   - Handle payment_intent.payment_failed
+   - Idempotency: check if already processed
+
+4. **Order Status**
+   - Map payment statuses to order statuses:
+     - payment_intent.created → pending
+     - payment_intent.succeeded → paid
+     - payment_intent.payment_failed → failed
+     - charge.refunded → refunded
+
+## Memory References
+
+@memory/workflows/payment/gotchas.md
+@memory/workflows/payment/insights.md
+@memory/workflows/payment/test-flows.md
+
+## Delegation
+
+- **@agents/tester** - Unit tests for payment logic
+- **@agents/e2e-runner** - E2E tests with test cards
+
+## Common Gotchas
+
+- Webhook signature: MUST use stripe.webhooks.constructEvent()
+- Atomicity: Create order BEFORE PaymentIntent, update on webhook
+- Idempotency: Check payment_intent.id before processing webhook
+- Handle requires_action: 3D Secure, bank verification
+- Test mode: Use Stripe test keys in development
+
+## Test Flows
+
+1. Successful payment → order status = paid
+2. Failed payment → order status = failed, show error
+3. 3D Secure → handle requires_action
+4. Webhook received twice → idempotent handling
+5. Refund initiated → inventory restored, status updated

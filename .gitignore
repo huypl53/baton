@@ -1,0 +1,15 @@
+# Per-developer local settings
+.claude/settings.local.json
+.claude/worktrees/
+
+# Isolated development worktrees
+.worktrees/
+
+# Session-specific reports (generated during work)
+/plans/reports/
+
+# Backup files
+*.bak
+
+# Design notes (not part of distribution)
+template.md

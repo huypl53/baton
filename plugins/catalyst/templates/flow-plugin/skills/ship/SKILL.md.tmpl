@@ -1,0 +1,64 @@
+---
+name: ship
+description: "Main pipeline orchestrator for {{project}}. Coordinates code → test → fix → verify loop with memory-aware context."
+argument-hint: "<feature-description>"
+metadata:
+  author: catalyst
+  version: "1.0.0"
+---
+
+# Ship - {{project}} Pipeline Orchestrator
+
+Main entry point for implementing features in {{project}}.
+
+## Usage
+
+```bash
+/{{project}}-flow:ship "Add user profile page"
+```
+
+## Process
+
+### 1. Context Loading
+
+Read accumulated knowledge:
+```
+@memory/INDEX.md
+@memory/conventions.md
+@memory/gotchas.md
+```
+
+### 2. Workflow Detection
+
+Based on feature description, select appropriate workflow:
+- Auth-related → `/{{{project}}}-flow:auth-flow`
+- CRUD operation → `/{{{project}}}-flow:crud-flow`
+- API endpoint → `/{{{project}}}-flow:api-flow`
+
+### 3. Execute Workflow
+
+Delegate to selected workflow command.
+
+### 4. Post-Ship
+
+Update memory:
+1. Capture insights in relevant workflow memory
+2. Add gotchas discovered
+3. Create decision record if significant
+
+## Subagents
+
+| Agent | When |
+|-------|------|
+| `@agents/tester` | Unit/integration tests |
+| `@agents/e2e-runner` | End-to-end tests |
+| `@agents/migrator` | Database changes |
+| `@agents/reviewer` | Code review |
+
+## Fix Loop
+
+Max 3 attempts per test type:
+1. Run test
+2. If fail → analyze, fix
+3. Re-run test
+4. If still fail after 3 → escalate to user

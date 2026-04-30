@@ -1,0 +1,42 @@
+# {{project}} Knowledge Index
+
+Last updated: {{date}}
+
+## Overview
+
+This memory system accumulates knowledge across sessions.
+
+## Structure
+
+```
+memory/
+├── INDEX.md          ← You are here
+├── conventions.md    ← Coding patterns
+├── gotchas.md        ← Global traps
+├── workflows/
+│   └── {workflow}/
+│       ├── insights.md
+│       ├── gotchas.md
+│       └── test-flows.md
+└── decisions/
+    └── {workflow}/
+```
+
+## Active Workflows
+
+{{#each workflows}}
+- **{{name}}**: @memory/workflows/{{name}}/
+{{/each}}
+
+## Global Insights
+
+<!-- Add cross-cutting insights here -->
+
+## Quick Reference
+
+| Need | Read |
+|------|------|
+| Coding patterns | @memory/conventions.md |
+| Known traps | @memory/gotchas.md |
+| Feature insights | @memory/workflows/{name}/insights.md |
+| Test commands | @memory/workflows/{name}/test-flows.md |

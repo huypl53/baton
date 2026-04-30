@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "workflow-command.schema.json",
+  "title": "Workflow Command",
+  "description": "Schema for commands/{name}-flow.md frontmatter",
+  "type": "object",
+  "required": ["description"],
+  "properties": {
+    "description": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 200,
+      "description": "Workflow description"
+    }
+  },
+  "additionalProperties": false
+}
