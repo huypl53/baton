@@ -9,7 +9,8 @@ Claude Code plugins distributed via marketplace.
 ├── plugins/
 │   ├── catalyst/             # meta-plugin for project workflows
 │   ├── daily/                # daily productivity skills
-│   └── nextjs/               # Next.js development skills
+│   ├── nextjs/               # Next.js development skills
+│   └── partner/              # collaborative learning skills
 └── setup.sh
 ```
 
@@ -29,6 +30,7 @@ Ensure `~/.claude/skills/` directory exists before running setup.
 /plugin install daily@huypl53
 /plugin install nextjs@huypl53
 /plugin install catalyst@huypl53
+/plugin install partner@huypl53
 ```
 
 ### After adding a new Catalyst plugin locally
@@ -54,12 +56,12 @@ Then install the plugin as usual:
 ./setup.sh --plugins daily
 
 # Symlink multiple plugins
-./setup.sh --plugins daily,nextjs,catalyst
+./setup.sh --plugins daily,nextjs,catalyst,partner
 ```
 
 ## Adding a New Skill
 
-1. Choose a plugin: `plugins/daily`, `plugins/nextjs`, or `plugins/catalyst`
+1. Choose a plugin: `plugins/daily`, `plugins/nextjs`, `plugins/catalyst`, or `plugins/partner`
 2. Create `plugins/<plugin>/skills/<name>/SKILL.md`
 3. Add scripts in `plugins/<plugin>/skills/<name>/scripts/` if needed
 4. Update `.claude-plugin/marketplace.json` plugin entry when catalog changes
