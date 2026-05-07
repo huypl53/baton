@@ -2,6 +2,49 @@
 
 Claude Code plugins distributed via marketplace.
 
+## Plugins
+
+### catalyst
+
+Meta-plugin that generates project-specific workflow plugins.
+
+| Skill | Description |
+|-------|-------------|
+| `catalyst:scout` | Analyze project structure, stack, patterns. Detects language, framework, test runner, conventions. |
+| `catalyst:scaffold` | Generate customized flow plugin from templates based on scout analysis. |
+| `catalyst:workflow` | CRUD for feature workflows. Add, edit, remove, list workflows in a flow plugin. |
+| `catalyst:review` | Review plugins for coherence, completeness, style compliance. Auto-fix available. |
+| `catalyst:validate` | Validate schema compliance, reference integrity, determinism. |
+
+### daily
+
+General productivity and workflow skills.
+
+| Skill | Description |
+|-------|-------------|
+| `daily:baton` | Post-task checklist with persistent insights. UAT testing, documentation, knowledge compounding. |
+| `daily:tmux` | Remote control tmux sessions for interactive CLIs (python, gdb, etc.). |
+| `daily:debug` | Debug with logs instead of guessing. Instrument code and run it to get evidence. |
+
+### nextjs
+
+Next.js ecommerce skill bundle.
+
+| Skill | Description |
+|-------|-------------|
+| `nextjs:hooks` | Design production-grade React hooks. Facade hooks, state machines, TanStack composition. |
+| `nextjs:ecommerce` | Build Next.js ecommerce apps. Cart/checkout, Shopify/Stripe/MedusaJS, 4-layer architecture. |
+| `nextjs:schema` | Type-safe apps with Drizzle+Zod+TypeScript. Schema-to-type flow, single source of truth. |
+| `nextjs:optimistic` | TanStack Query v5 optimistic updates. Instant UI feedback, rollback, dual-cache updates. |
+
+### partner
+
+Collaborative learning and guidance skills.
+
+| Skill | Description |
+|-------|-------------|
+| `partner:mentor` | Guide users step-by-step instead of doing work. Modes: `--steps`, `--guide`, `--phases`. |
+
 ## Structure
 
 ```
